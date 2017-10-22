@@ -21,19 +21,16 @@ module.exports = {
       path.join(__dirname, './client/index.js')
     ],
     vendor: [
-      'axios',
+      'isomorphic-fetch',
       'react',
       'react-bootstrap',
       'react-dom',
-      'react-helmet',
-      'react-hot-loader',
       'react-redux',
       'react-router',
       'react-router-bootstrap',
       'react-router-config',
       'react-router-dom',
       'redux',
-      'redux-form',
       'redux-thunk',
     ]
   },
@@ -151,7 +148,6 @@ module.exports = {
 
   plugins: [
 
-    // global constants configured at compile time
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
@@ -159,38 +155,24 @@ module.exports = {
       }
     }),
 
-    // creates a separate file (chunk), consisting of common modules shared between multiple entry points
-    // By separating modules from bundles, the chunked file is loaded once & stored in cache for later use
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity,
       filename: '[name].[chunkhash].js'
     }),
 
-    // provides support for isomorphic/universal rendering
-    // helps resolve require calls between Node & webpack
-    // https://github.com/catamphetamine/webpack-isomorphic-tools
+
     new WebpackIsomorphicToolsPlugin(webpackIsomorphicToolsConfig),
 
-    // extract text from a bundle(s) into a separate file
-    // https://github.com/webpack-contrib/extract-text-webpack-plugin
     new ExtractTextPlugin({
       filename: '[name].[chunkhash].css',
       allChunks: true
     }),
 
-    // Bootstrap 4 requires Tether:
-    // new webpack.ProvidePlugin({
-    //  'window.Tether': 'tether',
-    //}),
-
-    // plugin for generating asset manifests
-    // defaults to 'manifest.json'
     new ManifestPlugin({
       basePath: '/'
     }),
 
-    // exports a manifest that maps entry chunk names to their output files
     new ChunkManifestPlugin({
       filename: 'chunk-manifest.json',
       manifestVariable: 'webpackManifest',
