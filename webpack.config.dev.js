@@ -4,6 +4,7 @@ const PUBLIC_PATH = '/';
 const webpack = require('webpack');
 const path = require('path');
 
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpackIsomorphicToolsConfig = require('./webpack.config.tools');
 const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -54,78 +55,40 @@ module.exports = {
       {
         test: /\.jsx*$/,
         exclude: /node_modules/,
-        use: [{
-          loader: 'babel-loader',
-        }]
-
+        use: [
+          { loader: 'babel-loader' }
+        ]
       },
 
       {
-        test: /\.css$/,
+        test: /(global\.css)$/,
         use:[
-          {
-            loader: 'style-loader',
-          }, 
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 1,
-              sourceMap: true,
-              localIdentName: '[name]_[local]_[hash:base64:5]'
-            }
-          }, 
-          {
-            loader: 'postcss-loader',
-          }
+          { loader: 'style-loader' }, 
+          { loader: 'css-loader' }
         ],
       },
 
       {
         test: /\.scss$/,
-        use:[
-          {
-            loader: 'style-loader',
-          }, 
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 2,
-              sourceMap: true,
-              localIdentName: '[name]_[local]_[hash:base64:5]'
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use:[
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                localIdentName: '[name]_[local]_[hash:base64:5]',
+                sourceMap: true,
+              }
+            }, 
+            {
+              loader: 'postcss-loader',
+            }, 
+            {
+              loader: 'sass-loader',
             }
-          }, 
-          {
-            loader: 'postcss-loader',
-          }, 
-          {
-            loader: 'sass-loader',
-          }
-        ],
-      },
-
-      {
-        test: /\.less$/,
-        use:[
-          { loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 2,
-              sourceMap: true,
-              localIdentName: '[name]_[local]_[hash:base64:5]'
-            }
-          }, 
-          {
-            loader: 'postcss-loader',
-          }, 
-          {
-            loader: 'less-loader',
-          }
-        ],
+          ]
+        })
       },
 
       {

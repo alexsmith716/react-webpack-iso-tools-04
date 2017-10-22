@@ -12,21 +12,6 @@ const bootstrapEntryPoints = require('./webpack.bootstrap.config.js');
 console.log('>>>>>> webpack.config.prod <<<<<<<<');
 console.log('>>>> bootstrap-loader configuration: ', `${bootstrapEntryPoints.prod}`);
 
-// PostCSS Loader/Config Cascade
-// You can use different postcss.config.js files in different directories. 
-// Config lookup starts from path.dirname(file) and walks the file tree upwards until a config file is found.
-
-// https://gist.github.com/rmoorman/94eeed830942758e218d92f15ce58d88
-
-// Bootstrap 4 (requires tether entry point):
-//  (module.exports > entry > app)
-//  'tether', 
-
-
-// Bootstrap 4 (to serve jQuery for js scripts)
-//  (module.exports > module > rules > test)
-//  test: /bootstrap[\/\\]dist[\/\\]js[\/\\]umd[\/\\]/,
-
 module.exports = {
 
   entry: {
@@ -66,29 +51,17 @@ module.exports = {
       {
         test: /\.jsx*$/,
         exclude: /node_modules/,
-        use: [{
-          loader: 'babel-loader',
-        }]
+        use: [
+          { loader: 'babel-loader' }
+        ]
       },
 
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use:[
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                importLoaders: 1,
-                sourceMap: true
-              }
-            }, 
-            {
-              loader: 'postcss-loader',
-            }
-          ]
-        })
+        test: /(global\.css)$/,
+        use:[
+          { loader: 'style-loader' }, 
+          { loader: 'css-loader' }
+        ],
       },
 
       {
@@ -100,8 +73,8 @@ module.exports = {
               loader: 'css-loader',
               options: {
                 modules: true,
-                importLoaders: 2,
-                sourceMap: true
+                localIdentName: '[name]_[local]_[hash:base64:5]',
+                sourceMap: true,
               }
             }, 
             {
@@ -109,29 +82,6 @@ module.exports = {
             }, 
             {
               loader: 'sass-loader',
-            }
-          ]
-        })
-      },
-
-      {
-        test: /\.less$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use:[
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                importLoaders: 2,
-                sourceMap: true
-              }
-            }, 
-            {
-              loader: 'postcss-loader',
-            }, 
-            {
-              loader: 'less-loader',
             }
           ]
         })
