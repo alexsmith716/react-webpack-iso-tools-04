@@ -5,9 +5,10 @@ const projectBasePath = require('path').resolve(__dirname, './');
 
 require('babel-register')({
   "plugins": [
-    
+
   ]
 });
+
 
 require('babel-polyfill');
 
