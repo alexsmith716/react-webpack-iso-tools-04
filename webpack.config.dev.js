@@ -25,19 +25,16 @@ module.exports = {
       path.join(__dirname, './client/index.js')
     ],
     vendor: [
-      'axios',
+      'isomorphic-fetch',
       'react',
       'react-bootstrap',
       'react-dom',
-      'react-helmet',
-      'react-hot-loader',
       'react-redux',
       'react-router',
       'react-router-bootstrap',
       'react-router-config',
       'react-router-dom',
       'redux',
-      'redux-form',
       'redux-thunk',
     ]
   },
@@ -157,6 +154,7 @@ module.exports = {
 
     new webpack.HotModuleReplacementPlugin(),
 
+    // extract vendor related code to a bundle of its own
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity,
